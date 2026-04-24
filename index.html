@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meghan Fasano | Frontier AE Storybook</title>
+<style>
+
+:root{
+  --ms-blue:#0078d4;--ms-blue-dark:#004578;--navy:#071427;--ink:#172033;--muted:#5b677a;--soft:#f4f8fc;--line:#d9e4f1;--green:#107c10;--gold:#ffb900;--red:#d13438;--card:#fff;--shadow:0 10px 28px rgba(15,23,42,.11);--radius:20px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:"Segoe UI",Arial,sans-serif;background:linear-gradient(135deg,#eef6ff 0%,#ffffff 42%,#f7fbff 100%);color:var(--ink)}
+body{overflow-x:hidden}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1160px;margin:auto;padding:8px 14px;display:flex;align-items:center;gap:10px}
+.brand{font-weight:900;display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:14px}
+.logo{width:19px;height:19px;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.logo span:nth-child(1){background:#f25022}.logo span:nth-child(2){background:#7fba00}.logo span:nth-child(3){background:#00a4ef}.logo span:nth-child(4){background:#ffb900}
+.progress{flex:1;height:6px;background:#e8f2fc;border-radius:999px;overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ms-blue),#50e6ff);transition:.35s}
+.top-actions{display:flex;gap:6px}
+.btn{border:1px solid var(--line);background:white;color:#123;border-radius:999px;padding:7px 10px;font-weight:850;font-size:11.5px;cursor:pointer}
+.btn.primary{background:var(--ms-blue);border-color:var(--ms-blue);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.book{width:min(1120px,100%);margin:0 auto;flex:1;display:flex;flex-direction:column;padding:12px 14px 8px}
+.chapter{display:none;min-height:calc(100vh - 98px);animation:fade .22s ease}
+.chapter.active{display:grid;align-items:center}
+@keyframes fade{from{opacity:.25;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.page{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px 22px;position:relative;overflow:hidden;max-height:calc(100vh - 118px);overflow-y:auto}
+.page:before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,#f25022,#7fba00,#00a4ef,#ffb900)}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--ms-blue-dark);font-weight:950;margin-bottom:6px}
+h1{font-size:clamp(30px,5.2vw,54px);line-height:.98;letter-spacing:-.055em;margin:0 0 10px}
+h2{font-size:clamp(25px,3.8vw,40px);line-height:1.02;letter-spacing:-.045em;margin:0 0 10px}
+h3{margin:0 0 5px;font-size:15.5px}
+p{margin-top:6px;margin-bottom:8px}
+.lead{font-size:clamp(15px,1.55vw,19px);color:var(--muted);line-height:1.32;max-width:960px}
+
+.hero-grid{display:grid;grid-template-columns:1.18fr .82fr;gap:14px;align-items:stretch}
+.dark-card{background:linear-gradient(135deg,#071427,#103763);color:white;border-radius:20px;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+.dark-card p{color:#dbeafe}
+.quote{font-size:20px;font-weight:950;line-height:1.14;letter-spacing:-.025em}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.metric{background:#f8fbff;border:1px solid var(--line);border-radius:14px;padding:10px}
+.metric b{font-size:20px;display:block;color:#08192e}
+.metric span{font-size:9.5px;color:var(--muted);font-weight:800;text-transform:uppercase}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.tile{background:white;border:1px solid var(--line);border-radius:15px;padding:12px}
+.tile p{color:var(--muted);margin:0;font-size:13px;line-height:1.35}
+.num{width:28px;height:28px;border-radius:10px;background:#eaf4ff;color:#004578;display:grid;place-items:center;font-weight:950;margin-bottom:7px;font-size:12px}
+.callout{border-left:4px solid var(--ms-blue);background:#f0f7ff;border-radius:14px;padding:12px;font-size:14px;line-height:1.35}
+.soft{background:#f8fbff}
+.role-list{margin:6px 0 0;padding-left:18px}
+.role-list li{margin:5px 0;font-size:13.2px;line-height:1.28}
+
+.dash{display:grid;grid-template-columns:1.05fr .95fr;gap:12px}
+.signal{display:grid;grid-template-columns:32px 1fr;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.signal:last-child{border-bottom:0}
+.badge{width:32px;height:32px;border-radius:11px;background:#eaf4ff;display:grid;place-items:center;font-weight:950;color:#004578;font-size:12px}
+.mini-dashboard{border:1px solid var(--line);border-radius:18px;background:#fff;padding:12px}
+.bars{height:145px;display:flex;align-items:end;gap:10px;padding:22px 4px 25px}
+.bar{flex:1;min-height:18px;background:linear-gradient(180deg,#0078d4,#50e6ff);border-radius:9px 9px 0 0;position:relative}
+.bar b{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:10px}
+.bar span{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:10px;color:var(--muted);font-weight:850}
+
+.proof-card h3,.ref h3{color:#061b33}
+.proof-card p,.ref p{color:var(--muted);font-size:12.8px;line-height:1.34}
+.ref{background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px}
+.ref .title{font-weight:950;color:#004578;font-size:12.5px}
+.relationship{margin-top:7px;border-top:1px solid var(--line);padding-top:7px;color:var(--muted);font-size:12.5px;line-height:1.3}
+
+.story-controls{max-width:1120px;margin:0 auto 10px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.dot{width:8px;height:8px;border-radius:999px;background:#bfd5eb;border:0;cursor:pointer}
+.dot.active{background:var(--ms-blue);width:22px}
+.chapter-title{font-size:11px;font-weight:900;color:var(--muted)}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:100;align-items:flex-start;justify-content:center;padding:16px 10px;overflow:auto}
+.modal.open{display:flex}
+.modal-content{max-width:980px;width:100%;background:#fff;border-radius:20px;box-shadow:0 35px 90px rgba(0,0,0,.27);overflow:hidden}
+.modal-head{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:10px 14px;display:flex;gap:10px;align-items:center}
+.modal-head h2{font-size:20px;margin:0}
+.close{margin-left:auto}
+.cv-nav{display:flex;gap:6px;flex-wrap:wrap;background:#f8fafc;border-bottom:1px solid var(--line);padding:9px 14px}
+.cv-body{padding:14px}
+.cv-section{border-bottom:1px solid var(--line);padding:12px 0}
+.pill{display:inline-flex;margin:3px 3px 0 0;padding:5px 8px;border-radius:999px;background:#eef6ff;color:#004578;font-size:10.5px;font-weight:900}
+.small{font-size:10.8px;color:#64748b;line-height:1.3}
+.final-line{font-size:clamp(23px,3.2vw,36px);font-weight:950;line-height:1.08;letter-spacing:-.04em}
+.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.toc button{text-align:left;border:1px solid var(--line);background:white;border-radius:15px;padding:11px;cursor:pointer;font-size:12.5px;line-height:1.25}
+.toc b{display:block;color:#004578;margin-bottom:4px}
+.proof-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:14px}
+.proof-grid .proof-card{grid-column:span 2}
+.proof-grid .proof-card:nth-last-child(2){grid-column:2/span 2}
+.proof-grid .proof-card:nth-last-child(1){grid-column:4/span 2}
+
+@media(max-width:920px){
+  .hero-grid,.grid2,.grid3,.dash{grid-template-columns:1fr}
+  .grid5,.metrics,.toc{grid-template-columns:1fr 1fr}
+  .top-inner{align-items:flex-start;flex-direction:column}
+  .progress{width:100%}
+  .top-actions{width:100%;justify-content:space-between}
+  .chapter{min-height:auto}
+  .book{padding-top:10px}
+  .page{border-radius:18px;max-height:none}
+  .story-controls{position:sticky;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);padding-top:8px;padding-bottom:8px;margin-bottom:0;border-top:1px solid var(--line)}
+  .proof-grid{grid-template-columns:1fr}
+  .proof-grid .proof-card,.proof-grid .proof-card:nth-last-child(2),.proof-grid .proof-card:nth-last-child(1){grid-column:auto}
+}
+@media(max-width:560px){
+  .grid5,.metrics,.toc{grid-template-columns:1fr}
+  .top-actions .btn{padding:8px 9px}
+  .story-controls{gap:7px}
+  .chapter-title{display:none}
+  .quote{font-size:20px}
+  .bars{height:135px}
+  .book{padding-left:10px;padding-right:10px}
+  .page{padding:16px 12px}
+  .dot{width:8px;height:8px}
+  .dot.active{width:20px}
+}
+
+
+.market-signals{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.signal-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 10px}
+.signal-tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:11.5px;font-weight:900;cursor:pointer;color:#004578}
+.signal-tab.active{background:var(--ms-blue);border-color:var(--ms-blue);color:#fff}
+.signal-detail{display:none;background:#f8fbff;border:1px solid var(--line);border-radius:15px;padding:12px}
+.signal-detail.active{display:block}
+.signal-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:8px}
+.signal-mini{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px}
+.signal-mini b{color:#004578}
+.signal-mini p{font-size:12.4px;line-height:1.3;margin:5px 0 0;color:var(--muted)}
+@media(max-width:920px){.signal-detail-grid{grid-template-columns:1fr}}
+
+
+.compete-box{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.compete-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 10px}
+.compete-tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:11.5px;font-weight:900;cursor:pointer;color:#004578}
+.compete-tab.active{background:#071427;border-color:#071427;color:#fff}
+.compete-panel{display:none;background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px}
+.compete-panel.active{display:block}
+.compete-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:8px}
+.compete-card{background:#f8fbff;border:1px solid var(--line);border-radius:13px;padding:10px}
+.compete-card b{color:#004578}
+.compete-card p{font-size:12.4px;line-height:1.3;margin:5px 0 0;color:var(--muted)}
+.play{border-left:4px solid var(--ms-blue);background:#eef6ff}
+@media(max-width:920px){.compete-grid{grid-template-columns:1fr}}
+
+
+.signals-compare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+@media(max-width:920px){
+  .signals-compare-grid{grid-template-columns:1fr;}
+}
+
+
+.next-move-engine{
+  margin-top:12px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:linear-gradient(135deg,#f8fbff,#ffffff);
+  padding:12px;
+}
+.next-move-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.next-move-head h3{margin:0}
+.next-move-output{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+}
+.next-move-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:10px;
+}
+.next-move-card b{color:#004578}
+.next-move-card p{font-size:12.4px;line-height:1.3;margin:5px 0 0;color:var(--muted)}
+.next-move-summary{
+  margin-top:9px;
+  border-left:4px solid var(--ms-blue);
+  background:#eef6ff;
+  border-radius:12px;
+  padding:10px;
+  font-size:12.8px;
+  line-height:1.35;
+}
+@media(max-width:920px){.next-move-output{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="top-inner"><div class="brand"><div class="logo"><span></span><span></span><span></span><span></span></div>Meghan Fasano | Frontier AE Storybook</div><div class="progress"><span id="progress"></span></div><div class="top-actions"><button class="btn" onclick="openCV()">Open CV</button><button class="btn primary" onclick="goTo(0)">Start Story</button></div></div></header>
+<main class="book">
+
+<section class="chapter active" data-title="Cover"><div class="page"><div class="hero-grid"><div><div class="eyebrow">A short story for the hiring manager</div><h1>How I operate as a Frontier Account Executive.</h1><p class="lead">I turn customer signals into account strategy, executive action, and revenue outcomes — by combining sales pursuit strategy, technical fluency, field engagement, V-team orchestration, and customer storytelling.</p><div class="metrics"><div class="metric"><b>$12B+</b><span>Revenue influenced</span></div><div class="metric"><b>92–95%</b><span>Win-rate track record</span></div><div class="metric"><b>100+</b><span>Microsoft relationships</span></div><div class="metric"><b>Azure AI</b><span>Certified fluency</span></div></div></div><aside class="dark-card"><div><div class="eyebrow">The takeaway</div><p class="quote">I do not just bring a resume. I bring an operating model for winning.</p></div><p>Click through the chapters to see the why, how, command center vision, proof, and Microsoft leaders who can validate the impact.</p></aside></div></div></section>
+
+<section class="chapter" data-title="Table of Contents"><div class="page"><div class="eyebrow">Story map</div><h2>Five minutes. One clear picture.</h2><p class="lead">This story is designed to make the vision easy to understand and easy to remember.</p><div class="toc"><button onclick="goTo(2)"><b>1. Why</b>Why this approach wins in modern account management.</button><button onclick="goTo(3)"><b>2. How</b>How I operate across signals, action, and orchestration.</button><button onclick="goTo(5)"><b>3. Command Center</b>How dashboards become planning tools for tomorrow.</button><button onclick="goTo(6)"><b>4. Proof</b>The experience behind the vision.</button><button onclick="goTo(7)"><b>5. References</b>Microsoft leaders and relationship context.</button><button onclick="openCV()"><b>CV</b>Open full experience, skills, and proof.</button></div></div></section>
+
+<section class="chapter" data-title="Why"><div class="page"><div class="eyebrow">Chapter 1 — Why this matters</div><h2>Markets are moving faster than traditional account planning.</h2><p class="lead">The strongest AEs do not wait for a quarterly review to understand the customer. They read the market, spot change early, and turn those signals into the next customer conversation.</p><div class="grid5"><div class="tile"><div class="num">1</div><h3>See</h3><p>Customer, industry, competitor, leadership, M&A, hiring, and investment signals.</p></div><div class="tile"><div class="num">2</div><h3>Interpret</h3><p>Translate what changed into what it means for the buying motion.</p></div><div class="tile"><div class="num">3</div><h3>Prioritize</h3><p>Know which customer, deal, persona, or risk needs action first.</p></div><div class="tile"><div class="num">4</div><h3>Orchestrate</h3><p>Bring sales, technical, product, partner, and executive teams together early.</p></div><div class="tile"><div class="num">5</div><h3>Win</h3><p>Convert insight into meetings, pipeline, expansion, and closed outcomes.</p></div></div></div></section>
+
+<section class="chapter" data-title="How"><div class="page"><div class="eyebrow">Chapter 2 — How I operate</div><h2>I connect signals, story, people, and execution.</h2><div class="grid3"><div class="tile"><h3>See what others miss</h3><p>Market signals, technology shifts, account changes, competitive movement, and customer priorities.</p></div><div class="tile"><h3>Turn insight into action</h3><p>Translate intelligence into clear next steps, stakeholder messages, and business-outcome narratives.</p></div><div class="tile"><h3>Orchestrate to win</h3><p>Align the right V-team before friction appears — sales, product, technical, partner, and executive stakeholders.</p></div></div><div class="callout" style="margin-top:18px"><b>Operating principle:</b> I focus on driving revenue, not just supporting it — owning the strategy, execution, and outcomes across the sales cycle.</div></div></section>
+
+<section class="chapter" data-title="Ownership"><div class="page"><div class="eyebrow">Chapter 3 — Account ownership</div><h2>The role is about revenue execution, not just insight.</h2><p class="lead">My operating model maps directly to account ownership: pipeline creation, deal progression, expansion, renewals, risk mitigation, and customer trust.</p><div class="grid2"><div class="tile soft"><h3>Revenue execution</h3><ul class="role-list"><li>Drive pipeline creation and progression.</li><li>Manage deals from early signal through close and expansion.</li><li>Align account strategy to customer business priorities.</li><li>Partner across upsell, cross-sell, and renewal motions.</li><li>Identify risk early and protect revenue continuity.</li></ul></div><div class="tile soft"><h3>Microsoft advantage</h3><p>I have worked with <b>100+ current Microsoft employees</b> across sales, product, engineering, customer success, and industry teams.</p><p>I have also partnered with the <b>Microsoft Fabric team</b> to train sellers on how to position and sell Fabric — translating complex capabilities into clear business value.</p></div></div></div></section>
+
+<section class="chapter" data-title="Command Center"><div class="page"><div class="eyebrow">Chapter 4 — The command center vision</div><h2>Dashboards should help sellers plan tomorrow, not just explain yesterday.</h2><p class="lead">This is the command center concept: a practical sales planning view that helps account teams see what changed, understand why it matters, and decide what action to take next — before the customer or competitor sets the agenda.</p><div class="dash"><div class="tile"><h3>Morning Sales Intelligence</h3><div class="signal"><div class="badge">1</div><div><b>Signal</b><br><span class="small">Leadership change, acquisition, hiring spike, earnings pressure, product launch, or competitor activity.</span></div></div><div class="signal"><div class="badge">2</div><div><b>Meaning</b><br><span class="small">What it means for the buying center, budget, timeline, business pressure, or risk.</span></div></div><div class="signal"><div class="badge">3</div><div><b>Action</b><br><span class="small">Who to call, what message to use, what Microsoft team to involve, and what meeting to create.</span></div></div></div><div class="mini-dashboard"><h3>Planning Dashboard Example</h3><div class="bars"><div class="bar" style="height:84%"><b>High</b><span>AI</span></div><div class="bar" style="height:72%"><b>Med+</b><span>Data</span></div><div class="bar" style="height:68%"><b>Med</b><span>Risk</span></div><div class="bar" style="height:91%"><b>High</b><span>V-Team</span></div></div><p class="small">Illustrative: account intelligence becomes planning priorities.</p></div>
+<div class="market-signals">
+  <div class="eyebrow">Interactive market signals</div>
+  <h3>Upcoming or possible M&A signals by industry</h3>
+  <p class="small">This section is designed to track public market activity across manufacturing, ISVs, and retail — then translate it into customer planning, risk awareness, and pipeline action.</p>
+  <div class="signal-tabs">
+    <button class="signal-tab active" onclick="showSignal('manufacturing', this)">Manufacturing</button>
+    <button class="signal-tab" onclick="showSignal('isv', this)">ISV / Software</button>
+    <button class="signal-tab" onclick="showSignal('retail', this)">Retail</button>
+  </div>
+
+  <div id="signal-manufacturing" class="signal-detail active">
+    <h3>🏭 Manufacturing: consolidation + automation pressure</h3>
+    <div class="signal-detail-grid">
+      <div class="signal-mini"><b>Signals to watch</b><p>Industrial firms acquiring AI, robotics, IoT, supply chain, or predictive maintenance capabilities.</p></div>
+      <div class="signal-mini"><b>What it means</b><p>Customers may need modernization across factory data, connected assets, operational analytics, and AI-enabled maintenance.</p></div>
+      <div class="signal-mini"><b>Sales action</b><p>Bring in Data & AI, Fabric, Azure IoT, and industry specialists to frame efficiency, downtime reduction, and plant modernization.</p></div>
+    </div>
+  </div>
+
+  <div id="signal-isv" class="signal-detail">
+    <h3>🧩 ISV / Software: platform expansion + AI differentiation</h3>
+    <div class="signal-detail-grid">
+      <div class="signal-mini"><b>Signals to watch</b><p>ISVs acquiring niche AI, data, workflow automation, cybersecurity, or vertical SaaS companies.</p></div>
+      <div class="signal-mini"><b>What it means</b><p>They may need scalable cloud infrastructure, marketplace strategy, co-sell support, data integration, and AI readiness.</p></div>
+      <div class="signal-mini"><b>Sales action</b><p>Position Azure as the growth platform, connect partner/co-sell motions, and identify Fabric or AI-powered workload opportunities.</p></div>
+    </div>
+  </div>
+
+  <div id="signal-retail" class="signal-detail">
+    <h3>🛍️ Retail: personalization + omnichannel reinvention</h3>
+    <div class="signal-detail-grid">
+      <div class="signal-mini"><b>Signals to watch</b><p>Retailers acquiring e-commerce, logistics, loyalty, personalization, ad-tech, or customer data capabilities.</p></div>
+      <div class="signal-mini"><b>What it means</b><p>They are likely trying to improve customer experience, unify data, personalize engagement, and protect margins.</p></div>
+      <div class="signal-mini"><b>Sales action</b><p>Frame Microsoft data, AI, Copilot, Fabric, and cloud modernization around customer lifetime value and operational efficiency.</p></div>
+    </div>
+  </div>
+
+  <div class="compete-box">
+    <div class="eyebrow">Interactive competitive mode</div>
+    <h3>Cloud competitor view: strengths, gaps, and recommended play</h3>
+    <p class="small">Use this as a planning view before customer conversations. The goal is not to bash competitors — it is to understand where each provider is strong, where Microsoft can differentiate, and what action the account team should take next.</p>
+
+    <div class="compete-tabs">
+      <button class="compete-tab active" onclick="showCompete('microsoft', this)">Microsoft</button>
+      <button class="compete-tab" onclick="showCompete('aws', this)">AWS</button>
+      <button class="compete-tab" onclick="showCompete('google', this)">Google Cloud</button>
+    </div>
+
+    <div id="compete-microsoft" class="compete-panel active">
+      <h3>🔷 Microsoft: enterprise trust + full platform story</h3>
+      <div class="compete-grid">
+        <div class="compete-card"><b>Strengths</b><p>Trusted enterprise relationships, Microsoft 365 reach, Azure, Fabric, Security, GitHub, Copilot, partner ecosystem, and strong executive alignment.</p></div>
+        <div class="compete-card"><b>Gaps to watch</b><p>Customers may not understand how the Microsoft stack connects, or may see Azure, Fabric, Copilot, and Security as separate conversations.</p></div>
+        <div class="compete-card play"><b>Recommended play</b><p>Tell one connected story: data foundation → AI use case → secure execution → measurable business outcome. Bring the V-team early.</p></div>
+      </div>
+    </div>
+
+    <div id="compete-aws" class="compete-panel">
+      <h3>🟧 AWS: strong cloud footprint + builder credibility</h3>
+      <div class="compete-grid">
+        <div class="compete-card"><b>Strengths</b><p>Large cloud footprint, strong developer familiarity, mature infrastructure services, marketplace presence, and deep technical adoption in many accounts.</p></div>
+        <div class="compete-card"><b>Gaps to watch</b><p>Executive buyers may need clearer business-value storytelling, productivity integration, governance, security, and end-user adoption connection.</p></div>
+        <div class="compete-card play"><b>Recommended play</b><p>Do not lead with “replace AWS.” Lead with “extend value.” Position Microsoft where business users, data, security, AI, and productivity meet.</p></div>
+      </div>
+    </div>
+
+    <div id="compete-google" class="compete-panel">
+      <h3>🟦 Google Cloud: data, analytics, and AI credibility</h3>
+      <div class="compete-grid">
+        <div class="compete-card"><b>Strengths</b><p>Strong reputation in data, analytics, AI, search, personalization, and digital-native innovation.</p></div>
+        <div class="compete-card"><b>Gaps to watch</b><p>Some enterprise customers may still look for deeper account coverage, integrated productivity workflows, Microsoft ecosystem alignment, and broad field orchestration.</p></div>
+        <div class="compete-card play"><b>Recommended play</b><p>Compete with business-process integration: Fabric + Copilot + Azure AI + Security, tied to the people already working in Microsoft 365.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="next-move-engine">
+  <div class="next-move-head">
+    <div>
+      <div class="eyebrow">Next move engine</div>
+      <h3>What I would do tomorrow as the AE</h3>
+    </div>
+    <button class="btn primary" onclick="generateNextMove()">Generate next move</button>
+  </div>
+  <p class="small">This uses the selected market signal and competitor lens to turn intelligence into an AE action plan.</p>
+  <div class="next-move-output">
+    <div class="next-move-card"><b>Who to engage</b><p id="nextWho">Select a market signal and competitor, then generate the recommended move.</p></div>
+    <div class="next-move-card"><b>Message to lead with</b><p id="nextMessage">The output will frame a customer-ready business conversation.</p></div>
+    <div class="next-move-card"><b>V-team to bring in</b><p id="nextTeam">The output will recommend the Microsoft resources to align early.</p></div>
+  </div>
+  <div class="next-move-summary" id="nextSummary"><b>AE takeaway:</b> The goal is to move from signal → conversation → opportunity before the market becomes obvious.</div>
+</div>
+</div></section>
+
+<section class="chapter" data-title="Proof"><div class="page"><div class="eyebrow">Chapter 5 — Proof behind the vision</div><h2>I have already done the work this vision requires.</h2><p class="lead">My background combines sales pursuit strategy, customer storytelling, technical fluency, field engagement, V-team orchestration, and design thinking.</p><div class="proof-grid"><div class="tile proof-card"><h3>Walmart / OpenAI demo</h3><p>Created an interactive AI demo and solution story that accelerated C-suite engagement and strategic alignment around enterprise AI search and customer experience.</p></div><div class="tile proof-card"><h3>FedEx CEO-level program</h3><p>Managed Microsoft/FedEx partnership work tied to a CEO-to-CEO strategic initiative involving Satya Nadella and FedEx leadership, coordinating executive, sales, engineering, and stakeholder alignment.</p></div><div class="tile proof-card"><h3>Walgreens CTO engagement</h3><p>Worked directly with CTO-level stakeholders and Microsoft teams to align cloud, AI, infrastructure, and business outcome narratives to budget and decision-making priorities.</p></div><div class="tile proof-card"><h3>Sam’s Club workshop</h3><p>Led design thinking workshop work that created a <b>$3.5M services engagement</b> and expanded the footprint for cloud and AI solutioning.</p></div><div class="tile proof-card"><h3>Pepsi / Coca-Cola / RCG</h3><p>Built sales communications, executive narratives, and customer-ready materials for major retail and consumer goods accounts, connecting technical value to business outcomes.</p></div></div></div></section>
+
+<section class="chapter" data-title="References"><div class="page"><div class="eyebrow">Chapter 6 — Microsoft references + relationship context</div><h2>Leaders who can speak to the impact.</h2><p class="lead">These leaders can speak directly to my impact, customer obsession, sales communications work, field partnership, and ability to work with strategic Microsoft customers and executive initiatives.</p><div class="grid2"><div class="ref"><h3>Shelley Bransten</h3><div class="title">Corporate Vice President, Worldwide Industry Solutions, Microsoft</div><div class="relationship"><b>Relationship:</b> Former skip-level leader while I was part of the Worldwide Retail & Consumer Goods Industry Team. Worked closely through industry/customer work and executive-facing initiatives across Microsoft’s largest strategic accounts.</div></div><div class="ref"><h3>Wade Graham</h3><div class="title">Chief Technology Officer, Microsoft US Commercial Industries</div><div class="relationship"><b>Relationship:</b> Former manager. Partnered directly on field impact, technical storytelling, customer-facing value, and executive-ready solution narratives.</div></div><div class="ref"><h3>Dennis Han</h3><div class="title">Executive Director / Industry Advisor, Microsoft</div><div class="relationship"><b>Relationship:</b> Industry leader and reference who can speak to retail, manufacturing, AI, and enterprise transformation context.<br><br>Together, we designed the customer interview approach and co-led a <b>2.5-day design thinking workshop</b>, where I created the activities, facilitated the sessions, and developed the roadmap.<br><br><b>Result:</b> Multi-million-dollar services engagement with executive validation from the Chief Product Officer.</div></div><div class="ref"><h3>Vic Miles</h3><div class="title">General Manager, Industry Advisory, Microsoft</div><div class="relationship"><b>Relationship:</b> Senior Microsoft field leader. Partnered on customer work, sales communications, and Microsoft impact. Vic brought me into the large Sam’s Club engagement to drive customer alignment and opportunity development.</div></div><div class="ref"><h3>Karen Garrette</h3><div class="title">Strategy Lead for Worldwide Industry Sales, Microsoft</div><div class="relationship"><b>Relationship:</b> Microsoft industry and executive-office relationship. Can speak to professional reputation and connection to Shelley’s leadership circle.</div></div><div class="callout"><b>Reference positioning:</b><br>I know these leaders would be happy to speak to the impact I have made in sales, customer storytelling, field partnership, and helping Microsoft teams win.</div></div></div></section>
+
+<section class="chapter" data-title="Close"><div class="page"><div class="eyebrow">Final chapter</div><p class="final-line">My goal is to be the AE who helps the team see around corners, align the right people, build the right story, and move revenue forward.</p><p class="lead">This storybook is the simplest version of that vision: practical, strategic, customer-obsessed, and grounded in real Microsoft impact.</p><div style="margin-top:22px"><button class="btn primary" onclick="openCV()">Open CV + proof</button> <button class="btn" onclick="goTo(0)">Replay story</button></div></div></section>
+
+</main>
+<div class="story-controls"><button id="prev" class="btn" onclick="prevChapter()">← Back</button><div><div id="chapterTitle" class="chapter-title">Cover</div><div id="dots" class="dots"></div></div><button id="next" class="btn primary" onclick="nextChapter()">Next →</button></div>
+</div>
+
+<div id="cvModal" class="modal"><div class="modal-content"><div class="modal-head"><h2>Meghan Fasano | CV + Proof</h2><button class="btn close" onclick="closeCV()">Close</button></div><div class="cv-nav"><a class="btn" href="#cv-summary">Summary</a><a class="btn" href="#cv-skills">Skills</a><a class="btn" href="#cv-proof">Proof</a><a class="btn" href="#cv-refs">References</a></div><div class="cv-body"><section id="cv-summary" class="cv-section"><h3>Executive Summary</h3><p><b>Account Executive · Commercial & Enterprise Sales Strategist</b><br>Commercial and enterprise sales strategist with 18+ years driving complex cloud, AI, infrastructure, and strategic growth pursuits across Microsoft, enterprise accounts, public sector, and strategic programs. Influenced more than $12B in closed revenue with 92–95% win rates on high-stakes opportunities.</p></section><section id="cv-skills" class="cv-section"><h3>Core Skills</h3><p><span class="pill">Enterprise Account Management</span><span class="pill">Cloud & AI Solution Selling</span><span class="pill">Pipeline Development</span><span class="pill">Executive Engagement</span><span class="pill">V-Team Orchestration</span><span class="pill">Competitive Positioning</span><span class="pill">Value Selling</span><span class="pill">Challenger Selling</span><span class="pill">Design Thinking</span><span class="pill">Microsoft Fabric Enablement</span></p></section><section id="cv-proof" class="cv-section"><h3>Proof Points</h3><ul><li>Walmart / OpenAI demo and AI search solution narrative.</li><li>FedEx CEO-level partnership work involving Satya Nadella and FedEx leadership.</li><li>Walgreens CTO engagement aligning cloud, AI, infrastructure, budget, and business outcomes.</li><li>Sam’s Club design thinking workshop that created a $3.5M services engagement.</li><li>Pepsi, Coca-Cola, and RCG executive narratives and customer-ready sales materials.</li><li>Internal cloud and AI launch tool that reduced launch cycle time by ~25% and accelerated approvals by 15–20%.</li></ul></section><section id="cv-refs" class="cv-section"><h3>Microsoft References</h3><p>Shelley Bransten, Wade Graham, Dennis Han, Vic Miles, and Karen Garrette can speak to my impact across sales, customer storytelling, field partnership, executive communications, and helping Microsoft teams win.</p><p class="small">Public-title language was kept conservative where public sources were limited.</p></section></div></div></div>
+<script>
+const chapters=[...document.querySelectorAll('.chapter')];let index=0;const progress=document.getElementById('progress');const dots=document.getElementById('dots');const title=document.getElementById('chapterTitle');
+chapters.forEach((_,i)=>{const b=document.createElement('button');b.className='dot';b.onclick=()=>goTo(i);dots.appendChild(b)});
+let currentSignal='manufacturing';
+let currentCompetitor='microsoft';
+
+function showCompete(id, btn){
+  currentCompetitor=id;
+  document.querySelectorAll('.compete-panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('compete-'+id).classList.add('active');
+  document.querySelectorAll('.compete-tab').forEach(el=>el.classList.remove('active'));
+  btn.classList.add('active');
+  generateNextMove(false);
+}
+
+function showSignal(id, btn){
+  currentSignal=id;
+  document.querySelectorAll('.signal-detail').forEach(el=>el.classList.remove('active'));
+  document.getElementById('signal-'+id).classList.add('active');
+  document.querySelectorAll('.signal-tab').forEach(el=>el.classList.remove('active'));
+  btn.classList.add('active');
+  generateNextMove(false);
+}
+
+function generateNextMove(animate=true){
+  const signalMap={
+    manufacturing:{
+      who:'COO, VP of Operations, Plant leaders, CIO/CDO, supply chain leadership.',
+      message:'Lead with operational efficiency: reduce downtime, unify plant data, and use AI to predict issues before they disrupt production.',
+      team:'Data & AI specialist, Fabric specialist, Azure IoT/Edge SME, Security, partner manufacturing ISV.'
+    },
+    isv:{
+      who:'CEO/founder, CTO, product leader, partner lead, marketplace owner.',
+      message:'Lead with growth and monetization: build AI differentiation, scale securely on Azure, and unlock co-sell/marketplace opportunity.',
+      team:'Partner Development Manager, Azure AI specialist, Fabric specialist, Marketplace/co-sell lead, GitHub/DevDiv resource.'
+    },
+    retail:{
+      who:'CIO/CDO, CMO, digital commerce leader, loyalty/customer experience leader, operations leader.',
+      message:'Lead with customer and margin outcomes: unify customer data, personalize experiences, improve fulfillment, and protect profitability.',
+      team:'Retail industry advisor, Data & AI specialist, Fabric specialist, Copilot/M365 lead, Security and partner CX ISV.'
+    }
+  };
+  const competeMap={
+    microsoft:{
+      angle:'Use Microsoft’s connected platform story as the advantage: Fabric + Azure AI + Copilot + Security + Microsoft 365 workflows.',
+      risk:'Risk to watch: the customer may not see the stack as one connected business-value story unless we simplify it.'
+    },
+    aws:{
+      angle:'Position Microsoft as the business-value extension layer, not only a replacement. Meet the customer where AWS already exists, then expand into data, AI, productivity, and security outcomes.',
+      risk:'Risk to watch: AWS may already own builder mindshare, so the sales play must connect technical value to executive outcomes.'
+    },
+    google:{
+      angle:'Compete with business-process integration. Google may lead with data/AI credibility; Microsoft can connect data, AI, security, and the daily workflow of users.',
+      risk:'Risk to watch: Google may frame AI innovation first, so Microsoft should frame innovation plus enterprise adoption.'
+    }
+  };
+  const s=signalMap[currentSignal];
+  const c=competeMap[currentCompetitor];
+  document.getElementById('nextWho').textContent=s.who;
+  document.getElementById('nextMessage').textContent=s.message + ' ' + c.angle;
+  document.getElementById('nextTeam').textContent=s.team;
+  document.getElementById('nextSummary').innerHTML='<b>AE takeaway:</b> '+c.risk+' Tomorrow’s move is to convert the selected signal into an executive conversation and a V-team action plan.';
+}
+function render(){chapters.forEach((c,i)=>c.classList.toggle('active',i===index));[...dots.children].forEach((d,i)=>d.classList.toggle('active',i===index));progress.style.width=((index+1)/chapters.length*100)+'%';title.textContent=chapters[index].dataset.title;document.getElementById('prev').disabled=index===0;document.getElementById('next').textContent=index===chapters.length-1?'Finish':'Next →';window.scrollTo({top:0,behavior:'smooth'});}function goTo(i){index=Math.max(0,Math.min(chapters.length-1,i));render()}function nextChapter(){if(index<chapters.length-1){index++;render()}}function prevChapter(){if(index>0){index--;render()}}function openCV(){document.getElementById('cvModal').classList.add('open')}function closeCV(){document.getElementById('cvModal').classList.remove('open')}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCV();if(e.key==='ArrowRight')nextChapter();if(e.key==='ArrowLeft')prevChapter();});render(); generateNextMove(false);
+</script>
+</body>
+</html>
